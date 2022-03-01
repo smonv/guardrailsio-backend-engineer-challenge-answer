@@ -1,0 +1,20 @@
+@baseUrl=http://localhost:3000
+@repositoryEndpoint={{baseUrl}}/repositories
+
+###
+
+GET {{repositoryEndpoint}}
+
+###
+
+POST {{repositoryEndpoint}}
+Content-Type: application/json
+
+{
+    "name": "echo",
+    "url": "https://github.com/labstack/echo"
+}
+
+###
+
+DELETE {{repositoryEndpoint}}/1
