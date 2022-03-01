@@ -10,8 +10,12 @@ import (
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	echoSwagger "github.com/swaggo/echo-swagger"
+
+	_ "beca/docs"
 )
 
+// @title  BECA API
 func main() {
 	ctx := context.Background()
 
@@ -36,6 +40,8 @@ func main() {
 	e.GET("/repositories/:rid", s.RepositoryShow)
 	e.POST("/repositories", s.RepositoryCreate)
 	e.DELETE("/repositories/:rid", s.RepositoryDelete)
+
+	e.GET("swagger/*", echoSwagger.WrapHandler)
 
 	e.Logger.Fatal(e.Start("localhost:3000"))
 }

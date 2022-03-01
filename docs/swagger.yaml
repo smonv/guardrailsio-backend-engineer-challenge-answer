@@ -1,0 +1,95 @@
+definitions:
+  beca.CreateRepositoryDTO:
+    properties:
+      name:
+        type: string
+      url:
+        type: string
+    type: object
+  beca.Repository:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      url:
+        type: string
+    type: object
+info:
+  contact: {}
+  title: BECA API
+paths:
+  /repositories:
+    delete:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+        "500":
+          description: ""
+      summary: delete a repository
+      tags:
+      - repositories
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/beca.Repository'
+        "404":
+          description: ""
+        "500":
+          description: ""
+      summary: list repository
+      tags:
+      - repositories
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: CreateRepositoryDTO
+        in: body
+        name: repository
+        required: true
+        schema:
+          $ref: '#/definitions/beca.CreateRepositoryDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/beca.Repository'
+        "400":
+          description: ""
+        "500":
+          description: ""
+      summary: create a repository
+      tags:
+      - repositories
+  /repositories/{rid}:
+    get:
+      parameters:
+      - description: Repository ID
+        in: path
+        name: rid
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/beca.Repository'
+            type: array
+        "500":
+          description: ""
+      summary: get a repository
+      tags:
+      - repositories
+swagger: "2.0"
