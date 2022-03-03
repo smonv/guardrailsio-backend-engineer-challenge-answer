@@ -29,8 +29,11 @@ func main() {
 	repositoryService := &postgresql.RepositoryService{
 		Ctx: ctx, DB: dbPool,
 	}
+	resultService := &postgresql.ResultService{
+		Ctx: ctx, DB: dbPool,
+	}
 
-	s := api.Server{RepositoryService: repositoryService}
+	s := api.Server{RepositoryService: repositoryService, ResultService: resultService}
 
 	e := echo.New()
 
@@ -40,6 +43,9 @@ func main() {
 	e.GET("/repositories/:rid", s.RepositoryShow)
 	e.POST("/repositories", s.RepositoryCreate)
 	e.DELETE("/repositories/:rid", s.RepositoryDelete)
+	e.POST("/repositories/:rid/scans", s.RepositoryScanCreate)
+
+	e.GET("/results", s.ResultIndex)
 
 	e.GET("swagger/*", echoSwagger.WrapHandler)
 

@@ -6,4 +6,5 @@ import (
 
 type Server struct {
 	RepositoryService beca.RepositoryService
+	ResultService     beca.ResultService
 }

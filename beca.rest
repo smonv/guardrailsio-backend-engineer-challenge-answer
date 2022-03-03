@@ -1,5 +1,6 @@
 @baseUrl=http://localhost:3000
 @repositoryEndpoint={{baseUrl}}/repositories
+@resultEndpoint={{baseUrl}}/results
 
 ###
 
@@ -18,3 +19,11 @@ Content-Type: application/json
 ###
 
 DELETE {{repositoryEndpoint}}/1
+
+###
+
+POST {{repositoryEndpoint}}/66/scans
+
+###
+
+GET {{resultEndpoint}}

@@ -86,7 +86,7 @@ func (s Server) RepositoryCreate(c echo.Context) error {
 // @Produce  json
 // @Success  200
 // @Failure  500
-// @Router   /repositories [delete]
+// @Router   /repositories/{rid} [delete]
 func (s Server) RepositoryDelete(c echo.Context) error {
 	idStr := c.Param("rid")
 

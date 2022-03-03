@@ -15,22 +15,28 @@ definitions:
       url:
         type: string
     type: object
+  beca.Result:
+    properties:
+      finishedAt:
+        type: string
+      id:
+        type: integer
+      queuedAt:
+        type: string
+      repositoryName:
+        type: string
+      repositoryUrl:
+        type: string
+      scanningAt:
+        type: string
+      status:
+        type: string
+    type: object
 info:
   contact: {}
   title: BECA API
 paths:
   /repositories:
-    delete:
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: ""
-        "500":
-          description: ""
-      summary: delete a repository
-      tags:
-      - repositories
     get:
       produces:
       - application/json
@@ -71,6 +77,17 @@ paths:
       tags:
       - repositories
   /repositories/{rid}:
+    delete:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+        "500":
+          description: ""
+      summary: delete a repository
+      tags:
+      - repositories
     get:
       parameters:
       - description: Repository ID
@@ -92,4 +109,48 @@ paths:
       summary: get a repository
       tags:
       - repositories
+  /repositories/{rid}/scans:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Repository ID
+        in: path
+        name: rid
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/beca.Result'
+        "400":
+          description: ""
+        "404":
+          description: ""
+        "500":
+          description: ""
+      summary: trigger a scan again a repository
+      tags:
+      - repositories
+  /results:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/beca.Result'
+            type: array
+        "500":
+          description: ""
+      summary: list result
+      tags:
+      - results
 swagger: "2.0"
