@@ -5,6 +5,9 @@ definitions:
         type: string
       url:
         type: string
+    required:
+    - name
+    - url
     type: object
   beca.Repository:
     properties:
@@ -32,6 +35,15 @@ definitions:
       status:
         type: string
     type: object
+  beca.UpdateRepositoryDTO:
+    properties:
+      name:
+        maxLength: 128
+        minLength: 1
+        type: string
+      url:
+        type: string
+    type: object
 info:
   contact: {}
   title: BECA API
@@ -56,24 +68,24 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: CreateRepositoryDTO
+      - description: UpdateRepositoryDTO
         in: body
         name: repository
         required: true
         schema:
-          $ref: '#/definitions/beca.CreateRepositoryDTO'
+          $ref: '#/definitions/beca.UpdateRepositoryDTO'
       produces:
       - application/json
       responses:
         "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/beca.Repository'
+          description: ""
         "400":
+          description: ""
+        "404":
           description: ""
         "500":
           description: ""
-      summary: create a repository
+      summary: update a repository
       tags:
       - repositories
   /repositories/{rid}:

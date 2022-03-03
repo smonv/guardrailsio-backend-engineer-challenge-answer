@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -33,7 +34,7 @@ func main() {
 		Ctx: ctx, DB: dbPool,
 	}
 
-	s := api.Server{RepositoryService: repositoryService, ResultService: resultService}
+	s := &api.Server{RepositoryService: repositoryService, ResultService: resultService, Validate: validator.New()}
 
 	e := echo.New()
 

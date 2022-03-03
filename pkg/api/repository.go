@@ -4,6 +4,7 @@ import (
 	"beca"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/labstack/echo/v4"
 )
@@ -36,7 +37,7 @@ func (s Server) RepositoryShow(c echo.Context) error {
 
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		return err
+		return echo.ErrBadRequest
 	}
 
 	repository, err := s.RepositoryService.Repository(id)
@@ -60,17 +61,21 @@ func (s Server) RepositoryShow(c echo.Context) error {
 // @Failure  500
 // @Router   /repositories [post]
 func (s Server) RepositoryCreate(c echo.Context) error {
-	r := new(beca.Repository)
+	r := new(beca.CreateRepositoryDTO)
 
 	if err := c.Bind(r); err != nil {
-		return err
+		return echo.ErrBadRequest
 	}
 
-	repository := beca.CreateRepositoryDTO{
+	if err := s.Validate.Struct(r); err != nil {
+		return echo.ErrBadRequest
+	}
+
+	repository := &beca.CreateRepositoryDTO{
 		Name: r.Name, Url: r.Url,
 	}
 
-	newRepository, err := s.RepositoryService.CreateRepository(repository)
+	newRepository, err := s.RepositoryService.CreateRepository(*repository)
 	if newRepository == nil {
 		return echo.ErrInternalServerError
 	}
@@ -79,6 +84,54 @@ func (s Server) RepositoryCreate(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, newRepository)
+}
+
+// @Tags     repositories
+// @Summary  update a repository
+// @Accept   json
+// @Produce  json
+// @Param    repository  body  beca.UpdateRepositoryDTO  true  "UpdateRepositoryDTO"
+// @Success  200
+// @Failure  400
+// @Failure  404
+// @Failure  500
+// @Router   /repositories [post]
+func (s Server) RepositoryUpdate(c echo.Context) error {
+	idStr := c.Param("rid")
+
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		return echo.ErrBadRequest
+	}
+
+	r := new(beca.UpdateRepositoryDTO)
+
+	if err := c.Bind(r); err != nil {
+		return echo.ErrBadRequest
+	}
+
+	if err := s.Validate.Struct(r); err != nil {
+		return echo.ErrBadRequest
+	}
+
+	repository, err := s.RepositoryService.Repository(id)
+	if repository == nil {
+		return echo.ErrNotFound
+	}
+	if err != nil {
+		return err
+	}
+
+	if r.Name != nil {
+		repository.Name = strings.TrimSpace(*r.Name)
+	}
+	if r.Url != nil {
+		repository.Url = strings.TrimSpace(*r.Url)
+	}
+
+	err = s.RepositoryService.UpdateRepository(repository)
+
+	return err
 }
 
 // @Tags     repositories

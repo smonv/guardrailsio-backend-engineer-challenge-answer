@@ -50,26 +50,26 @@ const docTemplate = `{
                 "tags": [
                     "repositories"
                 ],
-                "summary": "create a repository",
+                "summary": "update a repository",
                 "parameters": [
                     {
-                        "description": "CreateRepositoryDTO",
+                        "description": "UpdateRepositoryDTO",
                         "name": "repository",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/beca.CreateRepositoryDTO"
+                            "$ref": "#/definitions/beca.UpdateRepositoryDTO"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/beca.Repository"
-                        }
+                        "description": ""
                     },
                     "400": {
+                        "description": ""
+                    },
+                    "404": {
                         "description": ""
                     },
                     "500": {
@@ -201,6 +201,10 @@ const docTemplate = `{
     "definitions": {
         "beca.CreateRepositoryDTO": {
             "type": "object",
+            "required": [
+                "name",
+                "url"
+            ],
             "properties": {
                 "name": {
                     "type": "string"
@@ -246,6 +250,19 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "beca.UpdateRepositoryDTO": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "maxLength": 128,
+                    "minLength": 1
+                },
+                "url": {
                     "type": "string"
                 }
             }
