@@ -53,6 +53,7 @@ func main() {
 	e.GET("/repositories", s.RepositoryIndex)
 	e.GET("/repositories/:rid", s.RepositoryShow)
 	e.POST("/repositories", s.RepositoryCreate)
+	e.PATCH("/repositories/:rid", s.RepositoryUpdate)
 	e.DELETE("/repositories/:rid", s.RepositoryDelete)
 	e.POST("/repositories/:rid/scans", s.RepositoryScanCreate)
 
