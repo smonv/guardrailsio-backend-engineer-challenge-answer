@@ -7,6 +7,7 @@ type Result struct {
 	Status         string     `json:"status"`
 	RepositoryName string     `json:"repositoryName" db:"repository_name"`
 	RepositoryURL  string     `json:"repositoryUrl" db:"repository_url"`
+	Findings       []*Finding `json:"findings"`
 	QueuedAt       *time.Time `json:"queuedAt" db:"queued_at"`
 	ScanningAt     *time.Time `json:"scanningAt" db:"scanning_at"`
 	FinishedAt     *time.Time `json:"finishedAt" db:"finished_at"`
@@ -22,4 +23,5 @@ type ResultService interface {
 	Result(id int) (*Result, error)
 	Results() ([]*Result, error)
 	CreateResult(r CreateResultDTO) (*Result, error)
+	UpdateResult(r *Result) error
 }

@@ -41,7 +41,7 @@ func (s *ResultService) Results() ([]*beca.Result, error) {
 func (s *ResultService) CreateResult(dto beca.CreateResultDTO) (*beca.Result, error) {
 	var id int
 
-	err := s.DB.QueryRow(s.Ctx, "INSERT INTO result(status, repository_name, repository_url) VALUES ($1, $2, $3) RETURNING id", dto.Status, dto.RepositoryName, dto.RepositoryURL).Scan(&id)
+	err := s.DB.QueryRow(s.Ctx, "INSERT INTO result(status, repository_name, repository_url, queued_at) VALUES ($1, $2, $3, NOW()) RETURNING id", dto.Status, dto.RepositoryName, dto.RepositoryURL).Scan(&id)
 	if err != nil {
 		return nil, err
 	}
@@ -52,4 +52,21 @@ func (s *ResultService) CreateResult(dto beca.CreateResultDTO) (*beca.Result, er
 	}
 
 	return r, nil
+}
+
+func (s *ResultService) UpdateResult(r *beca.Result) (err error) {
+	tx, err := s.DB.Begin(s.Ctx)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if err != nil {
+			tx.Rollback(s.Ctx)
+		} else {
+			tx.Commit(s.Ctx)
+		}
+	}()
+
+	_, err = tx.Exec(s.Ctx, "UPDATE result SET status=$2, findings=$3, scanning_at=$4, finished_at=$5 WHERE id=$1", r.ID, r.Status, r.Findings, r.ScanningAt, r.FinishedAt)
+	return err
 }

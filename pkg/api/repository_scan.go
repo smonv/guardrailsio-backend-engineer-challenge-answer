@@ -23,6 +23,7 @@ func (s Server) RepositoryScanCreate(c echo.Context) error {
 
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
+		c.Logger().Error(err)
 		return err
 	}
 
@@ -31,6 +32,7 @@ func (s Server) RepositoryScanCreate(c echo.Context) error {
 		return echo.ErrNotFound
 	}
 	if err != nil {
+		c.Logger().Error(err)
 		return err
 	}
 
@@ -42,8 +44,11 @@ func (s Server) RepositoryScanCreate(c echo.Context) error {
 
 	result, err := s.ResultService.CreateResult(dto)
 	if err != nil {
+		c.Logger().Error(err)
 		return err
 	}
+
+	s.JobChan <- result.ID
 
 	return c.JSON(http.StatusOK, result)
 }

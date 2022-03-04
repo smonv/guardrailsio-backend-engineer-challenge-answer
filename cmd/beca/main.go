@@ -3,9 +3,11 @@ package main
 import (
 	"beca/pkg/api"
 	"beca/pkg/postgresql"
+	"beca/pkg/worker"
 	"context"
 	"fmt"
 	"os"
+	"runtime"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -34,9 +36,17 @@ func main() {
 		Ctx: ctx, DB: dbPool,
 	}
 
-	s := &api.Server{RepositoryService: repositoryService, ResultService: resultService, Validate: validator.New()}
+	jobChan := make(chan int)
+
+	s := &api.Server{RepositoryService: repositoryService, ResultService: resultService, Validate: validator.New(), JobChan: jobChan}
 
 	e := echo.New()
+
+	for i := 0; i < runtime.NumCPU(); i++ {
+		w := worker.New(ctx, jobChan, e.Logger, resultService)
+
+		go w.Run()
+	}
 
 	e.Use(middleware.Logger())
 

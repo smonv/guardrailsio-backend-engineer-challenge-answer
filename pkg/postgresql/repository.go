@@ -4,7 +4,6 @@ import (
 	"beca"
 	"context"
 	"errors"
-	"fmt"
 
 	"github.com/georgysavva/scany/pgxscan"
 	"github.com/jackc/pgx/v4"
@@ -20,7 +19,6 @@ func (s *RepositoryService) Repository(id int) (*beca.Repository, error) {
 	var r beca.Repository
 
 	err := pgxscan.Get(s.Ctx, s.DB, &r, "SELECT id, name, url FROM repository WHERE id=$1", id)
-	fmt.Println(err)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, nil

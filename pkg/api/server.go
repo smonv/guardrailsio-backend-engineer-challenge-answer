@@ -10,4 +10,5 @@ type Server struct {
 	Validate          *validator.Validate
 	RepositoryService beca.RepositoryService
 	ResultService     beca.ResultService
+	JobChan           chan int
 }

@@ -27,3 +27,7 @@ POST {{repositoryEndpoint}}/66/scans
 ###
 
 GET {{resultEndpoint}}
+
+### 
+
+POST {{repositoryEndpoint}}/61/scans
